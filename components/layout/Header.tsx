@@ -86,7 +86,7 @@ export default function Header() {
       </div>
 
       {menuOpen ? (
-        <div className="absolute inset-x-0 top-full mt-2 bg-navy px-6 pb-8 shadow-2xl shadow-black/20 md:hidden">
+        <div className="absolute inset-x-0 top-full bg-navy px-6 pb-8 shadow-2xl shadow-black/20 md:hidden">
           <div className="flex flex-col gap-5">
             {navItems.map((item) => (
               <a
