@@ -22,8 +22,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-navy/95 backdrop-blur-xl text-off-white ${
-        scrolled ? 'border-b border-white/10 py-3' : 'py-5'
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-navy shadow-[0_18px_40px_-22px_rgba(0,0,0,0.24)] text-off-white ${
+        scrolled ? 'py-3' : 'py-5'
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
@@ -86,7 +86,7 @@ export default function Header() {
       </div>
 
       {menuOpen ? (
-        <div className="absolute inset-x-0 top-full mt-2 bg-navy px-6 pb-8 pt-6 shadow-2xl shadow-black/20 md:hidden">
+        <div className="absolute inset-x-0 top-full mt-2 bg-navy px-6 pb-8 shadow-2xl shadow-black/20 md:hidden">
           <div className="flex flex-col gap-5">
             {navItems.map((item) => (
               <a
