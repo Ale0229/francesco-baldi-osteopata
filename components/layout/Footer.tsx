@@ -1,5 +1,7 @@
 'use client';
 
+import { FaMapMarkerAlt, FaPhone, FaClock } from 'react-icons/fa';
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -69,36 +71,45 @@ export default function Footer() {
               Contatti
             </h4>
             <div className="space-y-4">
-              <div>
-                <p className="text-xs font-sans text-muted uppercase tracking-wide mb-1">
-                  Indirizzo
-                </p>
-                <p className="text-sm font-sans leading-relaxed">
-                  Via Cesare Battisti 91, Modugno (BA)
-                </p>
+              <div className="flex items-start gap-3">
+                <FaMapMarkerAlt className="w-4 h-4 text-sage mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-sans text-muted uppercase tracking-wide mb-1">
+                    Indirizzo
+                  </p>
+                  <p className="text-sm font-sans leading-relaxed">
+                    Via Cesare Battisti 91, Modugno (BA)
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-sans text-muted uppercase tracking-wide mb-1">
-                  Telefono
-                </p>
-                <a
-                  href="tel:+393286674420"
-                  className="text-sm font-sans hover:text-sage transition-colors duration-200"
-                >
-                  328 667 4420
-                </a>
+              <div className="flex items-start gap-3">
+                <FaPhone className="w-4 h-4 text-sage mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-sans text-muted uppercase tracking-wide mb-1">
+                    Telefono
+                  </p>
+                  <a
+                    href="tel:+393286674420"
+                    className="text-sm font-sans hover:text-sage transition-colors duration-200"
+                  >
+                    328 667 4420
+                  </a>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-sans text-muted uppercase tracking-wide mb-2">
-                  Orari
-                </p>
-                <p className="text-sm font-sans leading-relaxed">
-                  Lun–Ven
-                  <br />
-                  08:30 – 13:00
-                  <br />
-                  15:00 – 20:30
-                </p>
+              <div className="flex items-start gap-3">
+                <FaClock className="w-4 h-4 text-sage mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-sans text-muted uppercase tracking-wide mb-2">
+                    Orari
+                  </p>
+                  <p className="text-sm font-sans leading-relaxed">
+                    Lun–Ven
+                    <br />
+                    08:30 – 13:00
+                    <br />
+                    15:00 – 20:30
+                  </p>
+                </div>
               </div>
             </div>
           </div>
