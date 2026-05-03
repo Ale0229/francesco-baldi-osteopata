@@ -2,25 +2,25 @@ import type { Review } from '@/types/review'
 
 const staticReviews: Review[] = [
   {
-    author: 'Maria R.',
+    author: 'Rosa Massari',
     role: 'Paziente',
     rating: 5,
     date: 'marzo 2025',
-    text: 'Il Dott. Baldi è un professionista straordinario. Dopo anni di mal di schiena cronico, dopo poche sedute ho ritrovato una qualità di vita che non ricordavo. Approccio umano, ascolto attivo e grande competenza.',
+    text: 'Il dottor Baldi è bravissimo. È competente,professionale. Il top. Non esiste uno come lui. Vivo a Milano e ogni volta che sono a Bari, passo da lui. È eccezionale.',
   },
   {
-    author: 'Luca T.',
+    author: 'Dante Ialongo',
     role: 'Paziente',
     rating: 5,
-    date: 'gennaio 2025',
-    text: 'Ho portato mio figlio di 8 mesi per alcune tensioni post-parto. Il dottore è stato delicatissimo e professionale. Risultati visibili già dalla prima seduta. Lo consiglio a tutti i neo-genitori.',
+    date: 'maggio 2025',
+    text: 'Ottima esperienza, professionista come pochi anche con i fatti, cosa che in questi casi conta molto. Professionale, cordiale e rispettoso. Mi ha risolto il problema che avevo di epicondilite! Lo consiglio',
   },
   {
-    author: 'Giovanna M.',
+    author: 'Cosmaele Vitucci',
     role: 'Paziente',
     rating: 5,
     date: 'novembre 2024',
-    text: 'Dopo un incidente ho seguito un percorso di fisioterapia manuale con il Dott. Baldi. Preciso, puntuale e molto attento ai progressi. Studio pulito e accogliente. Tornerò sicuramente.',
+    text: 'Il dott. Baldi é un grande professionista, altamente specializzato ed esperto. É stato l unico in grado di aiutarmi ad alleviare i miei sintomi di vertigini e tensione della zona cervicale del cranio e degli occhi, lavorando sulla mobilità del cranio e della zona temporo-mandibolare. Altamente consigliato!',
   },
 ]
 

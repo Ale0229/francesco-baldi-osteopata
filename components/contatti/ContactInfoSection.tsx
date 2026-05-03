@@ -1,4 +1,4 @@
-import { FaMapMarkerAlt, FaPhone, FaClock } from 'react-icons/fa'
+import { FaMapMarkerAlt, FaPhone, FaClock, FaExternalLinkAlt } from 'react-icons/fa'
 import ContactMapWrapper from './ContactMapWrapper'
 
 const MAPS_URL = 'https://maps.app.goo.gl/FrVxpqYBjTkkHPYz8'
@@ -37,11 +37,10 @@ export default function ContactInfoSection() {
               href={MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[0.91rem] leading-snug text-body transition-colors duration-200 hover:text-sage"
+              className="inline-flex items-center gap-1.5 text-[0.91rem] leading-snug text-sage underline transition-colors duration-200 hover:text-sage/70"
             >
-              Via Cesare Battisti 91
-              <br />
-              Modugno (BA)
+              Via Cesare Battisti, 91 - Modugno (BA)
+  
             </a>
           </div>
         </div>
@@ -57,7 +56,7 @@ export default function ContactInfoSection() {
             </p>
             <a
               href="tel:+393286674420"
-              className="text-[0.91rem] text-body transition-colors duration-200 hover:text-sage"
+              className="inline-flex items-center gap-1.5 text-[0.91rem] text-sage underline transition-colors duration-200 hover:text-sage/70"
             >
               328 667 4420
             </a>
@@ -88,7 +87,7 @@ export default function ContactInfoSection() {
       </div>
 
       {/* Mappa */}
-      <div className="h-[300px] overflow-hidden rounded-[5px] border border-sage/20">
+      <div className="h-[300px] overflow-hidden rounded-[5px] border border-sage/20" style={{ isolation: 'isolate' }}>
         <ContactMapWrapper />
       </div>
 

@@ -49,9 +49,7 @@ export async function POST(request: Request) {
     html: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #3d4455;">
         <div style="background: #15203D; padding: 24px 32px; border-radius: 6px 6px 0 0;">
-          <p style="margin: 0; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #6B9E82;">
-            Sito francescobaldosteopata.it
-          </p>
+        
           <h1 style="margin: 8px 0 0; font-size: 1.25rem; color: #F5F5F6; font-weight: 600;">
             Nuova richiesta di visita
           </h1>

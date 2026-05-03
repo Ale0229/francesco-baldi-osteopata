@@ -5,8 +5,8 @@ import { useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L, { type Marker as LeafletMarker } from 'leaflet'
 
-const LAT = 41.0872
-const LNG = 16.7919
+const LAT = 41.07882608106603
+const LNG = 16.775402085289425
 
 const MAPS_URL = 'https://maps.app.goo.gl/FrVxpqYBjTkkHPYz8'
 
