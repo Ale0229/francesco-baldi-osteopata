@@ -110,7 +110,7 @@ export async function POST(request: Request) {
 
         <div style="padding: 16px 32px; background: #f8f8f8; border: 1px solid #e8e8e8; border-top: none; border-radius: 0 0 6px 6px;">
           <p style="margin: 0; font-size: 0.74rem; color: #7a8196;">
-            Inviato tramite il modulo di contatto su francescobaldosteopata.it
+            Inviato tramite il modulo di contatto su francescobaldiosteopata.it
           </p>
         </div>
       </div>
