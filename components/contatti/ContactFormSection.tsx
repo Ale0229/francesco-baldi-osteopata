@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 type FormState = 'idle' | 'loading' | 'success' | 'error'
 
@@ -11,6 +12,7 @@ interface Fields {
   telefono: string
   motivo: string
   messaggio: string
+  privacy: boolean
 }
 
 interface Errors {
@@ -19,7 +21,10 @@ interface Errors {
   email?: string
   telefono?: string
   motivo?: string
+  privacy?: string
 }
+
+type Touched = Partial<Record<keyof Errors, boolean>>
 
 const MOTIVI = [
   'Dolore cervicale / collo',
@@ -38,20 +43,66 @@ const EMPTY: Fields = {
   telefono: '',
   motivo: '',
   messaggio: '',
+  privacy: false,
+}
+
+const HAS_DIGIT = /\d/
+const HAS_SPECIAL = /[^a-zA-ZàèìòùáéíóúÀÈÌÒÙÁÉÍÓÚ\s'\-.]/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
+
+function validateNome(val: string, label: 'nome' | 'cognome'): string | undefined {
+  const l = label === 'nome' ? 'Il nome' : 'Il cognome'
+  const trimmed = val.trim()
+  if (!trimmed) return `${l} è obbligatorio`
+  if (HAS_DIGIT.test(trimmed)) return `${l} non può contenere numeri`
+  if (HAS_SPECIAL.test(trimmed)) return `${l} non può contenere caratteri speciali`
+  if (trimmed.length < 2) return `${l} deve avere almeno 2 caratteri`
+  return undefined
+}
+
+function validateEmail(val: string): string | undefined {
+  const trimmed = val.trim()
+  if (!trimmed) return "L'email è obbligatoria"
+  if (!trimmed.includes('@')) return "L'indirizzo email deve contenere @"
+  const parts = trimmed.split('@')
+  if (!parts[1] || !parts[1].includes('.')) return 'Inserisci un dominio valido (es. gmail.com)'
+  if (!EMAIL_RE.test(trimmed)) return 'Inserisci un indirizzo email valido (es. nome@email.it)'
+  return undefined
+}
+
+function validateTelefono(val: string): string | undefined {
+  const trimmed = val.trim()
+  if (!trimmed) return 'Il numero di telefono è obbligatorio'
+  const digits = trimmed.replace(/[\s\-]/g, '')
+  if (!/^\d+$/.test(digits)) return 'Inserisci solo cifre (es. 328 1234567)'
+  if (digits.length < 9) return 'Il numero deve avere almeno 9 cifre'
+  if (digits.length > 10) return 'Il numero non può superare le 10 cifre'
+  return undefined
 }
 
 function validate(f: Fields): Errors {
   const e: Errors = {}
-  if (!f.nome.trim()) e.nome = 'Il nome è obbligatorio'
-  if (!f.cognome.trim()) e.cognome = 'Il cognome è obbligatorio'
-  if (!f.email.trim()) {
-    e.email = "L'email è obbligatoria"
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) {
-    e.email = 'Inserisci un indirizzo email valido'
-  }
-  if (!f.telefono.trim()) e.telefono = 'Il telefono è obbligatorio'
+  const nome = validateNome(f.nome, 'nome')
+  if (nome) e.nome = nome
+  const cognome = validateNome(f.cognome, 'cognome')
+  if (cognome) e.cognome = cognome
+  const email = validateEmail(f.email)
+  if (email) e.email = email
+  const telefono = validateTelefono(f.telefono)
+  if (telefono) e.telefono = telefono
   if (!f.motivo) e.motivo = 'Seleziona il motivo della visita'
+  if (!f.privacy) e.privacy = 'Devi accettare la Privacy Policy per inviare il modulo'
   return e
+}
+
+function validateField(name: keyof Errors, f: Fields): string | undefined {
+  if (name === 'nome') return validateNome(f.nome, 'nome')
+  if (name === 'cognome') return validateNome(f.cognome, 'cognome')
+  if (name === 'email') return validateEmail(f.email)
+  if (name === 'telefono') return validateTelefono(f.telefono)
+  if (name === 'motivo') return f.motivo ? undefined : 'Seleziona il motivo della visita'
+  if (name === 'privacy') return f.privacy ? undefined : 'Devi accettare la Privacy Policy per inviare il modulo'
+  return undefined
 }
 
 const labelCls =
@@ -65,23 +116,44 @@ const errMsgCls = 'mt-1.5 text-[0.77rem] text-red-500'
 export default function ContactFormSection() {
   const [fields, setFields] = useState<Fields>(EMPTY)
   const [errors, setErrors] = useState<Errors>({})
+  const [touched, setTouched] = useState<Touched>({})
   const [status, setStatus] = useState<FormState>('idle')
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) {
-    const { name, value } = e.target
-    setFields((prev) => ({ ...prev, [name]: value }))
-    if (errors[name as keyof Errors]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }))
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
+
+    let newValue: string | boolean = type === 'checkbox' ? checked : value
+
+    if (name === 'telefono' && typeof newValue === 'string') {
+      newValue = newValue.replace(/[^\d\s\-]/g, '')
+    }
+
+    const updated = { ...fields, [name]: newValue }
+    setFields(updated)
+
+    if (touched[name as keyof Errors]) {
+      const err = validateField(name as keyof Errors, updated)
+      setErrors((prev) => ({ ...prev, [name]: err }))
     }
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleBlur(e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    const { name } = e.target
+    const fieldName = name as keyof Errors
+    setTouched((prev) => ({ ...prev, [fieldName]: true }))
+    const err = validateField(fieldName, fields)
+    setErrors((prev) => ({ ...prev, [fieldName]: err }))
+  }
+
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     const errs = validate(fields)
     if (Object.keys(errs).length > 0) {
       setErrors(errs)
+      setTouched({ nome: true, cognome: true, email: true, telefono: true, motivo: true, privacy: true })
       return
     }
     setStatus('loading')
@@ -122,7 +194,7 @@ export default function ContactFormSection() {
           </p>
         </div>
         <button
-          onClick={() => { setFields(EMPTY); setStatus('idle') }}
+          onClick={() => { setFields(EMPTY); setErrors({}); setTouched({}); setStatus('idle') }}
           className="mt-2 text-[0.82rem] font-medium text-sage underline-offset-2 hover:underline"
         >
           Invia un altro messaggio
@@ -158,6 +230,7 @@ export default function ContactFormSection() {
               autoComplete="given-name"
               value={fields.nome}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="Francesco"
               className={errors.nome ? inputErrCls : inputCls}
             />
@@ -174,6 +247,7 @@ export default function ContactFormSection() {
               autoComplete="family-name"
               value={fields.cognome}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="Baldi"
               className={errors.cognome ? inputErrCls : inputCls}
             />
@@ -194,6 +268,7 @@ export default function ContactFormSection() {
               autoComplete="email"
               value={fields.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="nome@email.it"
               className={errors.email ? inputErrCls : inputCls}
             />
@@ -210,6 +285,7 @@ export default function ContactFormSection() {
               autoComplete="tel"
               value={fields.telefono}
               onChange={handleChange}
+              onBlur={handleBlur}
               placeholder="328 000 0000"
               className={errors.telefono ? inputErrCls : inputCls}
             />
@@ -227,6 +303,7 @@ export default function ContactFormSection() {
             name="motivo"
             value={fields.motivo}
             onChange={handleChange}
+            onBlur={handleBlur}
             className={errors.motivo ? inputErrCls : inputCls}
           >
             <option value="">Seleziona un motivo…</option>
@@ -256,6 +333,33 @@ export default function ContactFormSection() {
             placeholder="Descrivi brevemente il tuo problema o le domande che hai…"
             className={`${inputCls} resize-none`}
           />
+        </div>
+
+        {/* Privacy */}
+        <div className="flex flex-col gap-1.5">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="privacy"
+              checked={fields.privacy}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-navy/30 accent-sage"
+            />
+            <span className="text-[0.83rem] leading-relaxed text-body">
+              Ho letto e accetto la{' '}
+              <Link
+                href="/privacy"
+                target="_blank"
+                className="text-sage underline-offset-2 hover:underline"
+              >
+                Privacy Policy
+              </Link>{' '}
+              in conformità al GDPR (Regolamento UE 2016/679){' '}
+              <span className="text-sage">*</span>
+            </span>
+          </label>
+          {errors.privacy && <p className={errMsgCls}>{errors.privacy}</p>}
         </div>
 
         {/* Errore generico */}
