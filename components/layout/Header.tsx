@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: 'Home', href: '/' },
@@ -12,6 +13,7 @@ const navItems = [
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -27,7 +29,8 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-        <a href="/" className="flex items-center gap-4">
+        <a href="/" className="flex items-center gap-3">
+          <img src="/logo.svg" alt="" className="h-9 w-auto flex-shrink-0" />
           <div>
             <p className="font-serif text-xl font-semibold tracking-tight">
               Dott. Francesco Baldi
@@ -39,15 +42,22 @@ export default function Header() {
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm uppercase tracking-[0.3em] text-off-white transition-colors duration-200 hover:text-sage"
-            >
-              {item.label}
-            </a>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={`text-sm uppercase tracking-[0.3em] transition-colors duration-200 ${
+                  isActive ? 'text-sage' : 'text-off-white hover:text-sage'
+                }`}
+              >
+                <span className={isActive ? 'border-b-2 border-sage pb-0.5' : ''}>
+                  {item.label}
+                </span>
+              </a>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
@@ -87,17 +97,24 @@ export default function Header() {
 
       {menuOpen ? (
         <div className="absolute inset-x-0 top-full bg-navy px-6 pb-8 shadow-2xl shadow-black/20 md:hidden">
-          <div className="flex flex-col gap-5">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-base uppercase tracking-[0.3em] text-off-white transition-colors duration-200 hover:text-sage"
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
+          <div className="flex flex-col items-end gap-5">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`text-base uppercase tracking-[0.3em] transition-colors duration-200 ${
+                    isActive ? 'text-sage' : 'text-off-white hover:text-sage'
+                  }`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <span className={isActive ? 'border-b-2 border-sage pb-0.5' : ''}>
+                    {item.label}
+                  </span>
+                </a>
+              );
+            })}
           </div>
           <div className="mt-8">
             <a
